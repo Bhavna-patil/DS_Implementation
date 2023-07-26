@@ -1,37 +1,41 @@
 #include<stdlib.h>
 #include<iostream>
 using namespace std;
+template<class X>
 struct node
 {
-    node *prev;
-    int item;
-    node *next;
+    node<X> *prev;
+    X item;
+    node<X> *next;
 };
+template<class X>
 class DCLL
 {
     private:
-       node *start;
+       node<X> *start;
     public: 
        DCLL(); 
-       DCLL(DCLL&);
-       DCLL& operator=(DCLL&);
-       void InsertAtStart(int);
-       void InsertAtLast(int);
-       void InsertAfter(node*,int); 
-       node *Search(int);
+       DCLL(DCLL<X>&);
+       DCLL<X>& operator=(DCLL<X>&);
+       void InsertAtStart(X);
+       void InsertAtLast(X);
+       void InsertAfter(node<X>*,X); 
+       node<X>* Search(X);
        void DeleteFirst();
        void DeleteLast();
-       void DeleteNode(node*);
+       void DeleteNode(node<X>*);
        void PrintLIstItem();
        ~DCLL();
 };
-DCLL::DCLL()
+template<class X>
+DCLL<X>::DCLL()
 {
     start=NULL;
 }
-DCLL::DCLL(DCLL &l)
+template<class X>
+DCLL<X>::DCLL(DCLL<X> &l)
 {
-    node *t=l.start;
+    node<X> *t=l.start;
     if(l.start)
     {
         start=NULL;
@@ -45,7 +49,8 @@ DCLL::DCLL(DCLL &l)
     else
      start=NULL;
 }
-DCLL& DCLL::operator=(DCLL &l)
+template<class X>
+DCLL<X>& DCLL<X>::operator=(DCLL<X> &l)
 {
     while(start)
        DeleteFirst();
@@ -64,9 +69,10 @@ DCLL& DCLL::operator=(DCLL &l)
      start=NULL;
     return *this; 
 }
-void DCLL::InsertAtStart(int data)
+template<class X>
+void DCLL<X>::InsertAtStart(X data)
 {
-    node *n=new node;
+    node<X> *n=new node<X>;
     n->item=data;
     if(start==NULL)
     {
@@ -83,9 +89,10 @@ void DCLL::InsertAtStart(int data)
       start=n;
    }
 }
-void DCLL::InsertAtLast(int data)
+template<class X>
+void DCLL<X>::InsertAtLast(X data)
 {
-    node *n=new node;
+    node<X> *n=new node<X>;
     n->item=data;
     if(start==NULL)
     {
@@ -101,11 +108,12 @@ void DCLL::InsertAtLast(int data)
        start->prev=n;
     }
 }
-void DCLL::InsertAfter(node *t,int data)
+template<class X>
+void DCLL<X>::InsertAfter(node<X> *t,X data)
 {
    if(t)
    {
-         node *n=new node;
+         node<X> *n=new node<X>;
           n->prev=t; 
           n->item=data;
           n->next=t->next;
@@ -113,9 +121,10 @@ void DCLL::InsertAfter(node *t,int data)
           t->next=n;  
    }
 }
-node* DCLL::Search(int data)
+template<class X>
+node<X>* DCLL<X>::Search(X data)
 {
-    node *t=start;
+    node<X> *t=start;
     if(start==NULL)
        return NULL;
     do
@@ -127,9 +136,10 @@ node* DCLL::Search(int data)
   
     return NULL;
 }
-void DCLL::DeleteFirst()
+template<class X>
+void DCLL<X>::DeleteFirst()
 {
-    node *r;
+    node<X> *r;
     if(start)
     {
        if(start->next==start)
@@ -149,9 +159,10 @@ void DCLL::DeleteFirst()
     else
      cout<<"UNDERFLOW..........";
 }
-void DCLL::DeleteLast()
+template<class X>
+void DCLL<X>::DeleteLast()
 {
-     node *r;
+     node<X>*r;
     if(start)
     {
        if(start->next==start)
@@ -170,7 +181,8 @@ void DCLL::DeleteLast()
     else
     cout<<"UNDEFLOW.........";
 }
-void DCLL::DeleteNode(node *r)
+template<class X>
+void DCLL<X>::DeleteNode(node<X> *r)
 {
     if(r)
     {
@@ -184,11 +196,12 @@ void DCLL::DeleteNode(node *r)
         }  
     }
 }
-void DCLL::PrintLIstItem()
+template<class X>
+void DCLL<X>::PrintLIstItem()
 {
     if(start)
     {
-        node *t=start;
+        node<X> *t=start;
         while(t!=start->prev)
            {
              cout<<t->item<<" ";
@@ -199,7 +212,8 @@ void DCLL::PrintLIstItem()
     else
     cout<<"UNDERFLOW.......";
 }
-DCLL::~DCLL()
+template<class X>
+DCLL<X>::~DCLL()
 {
     while(start)
       DeleteFirst();

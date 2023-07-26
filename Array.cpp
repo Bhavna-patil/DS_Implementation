@@ -1,43 +1,47 @@
 #include<stdlib.h>
 #include<iostream>
 using namespace std;
+template<class X>
 class Array
 {
   private:
       int capacity;
       int lastIndex;
-      int *ptr;
+      X *ptr;
   public:
       Array();
       Array(int a);
-      Array(Array&);
-      Array& operator=(Array&);
+      Array(Array<X>&);
+      Array& operator=(Array<X>&);
       void creatArray(int);
-      void Insert(int,int);
-      void Append(int);
+      void Insert(int,X);
+      void Append(X);
       void Delete(int);
-      void Edit(int,int);
-      int getItem(int);
+      void Edit(int,X);
+      X getItem(int);
       bool isEmpty();
       bool isFull();
-      int SearchData(int);
+      int SearchData(X);
       int countItem();
       int getCapacity();
       ~Array();
 };
-Array::Array()
+template<class X>
+Array<X>::Array()
 {
    ptr=NULL;
    capacity=0;
    lastIndex=-1;
 }
-Array::Array(int c)
+template<class X>
+Array<X>::Array(int c)
 {
     capacity=c;
     lastIndex=-1;
-    ptr=new int[capacity];
+    ptr=new X[capacity];
 }
-Array::Array(Array &A)
+template<class X>
+Array<X>::Array(Array<X> &A)
 {
     capacity=A.capacity;
     lastIndex=A.lastIndex;
@@ -46,27 +50,30 @@ Array::Array(Array &A)
     for(i=0;i<=lastIndex;i++)
       ptr[i]=A.ptr[i];
 }
-Array& Array::operator=(Array &A)
+template<class X>
+Array<X>& Array<X>::operator=(Array<X> &A)
 {
     if(ptr!=NULL)
        delete []ptr;
     capacity=A.capacity;
     lastIndex=A.lastIndex;
-    ptr=new int[capacity];
+    ptr=new X[capacity];
     int i;
     for(i=0;i<=lastIndex;i++)
       ptr[i]=A.ptr[i];  
       return *this; 
 }
-void Array::creatArray(int c)
+template<class X>
+void Array<X>::creatArray(int c)
 {
    if(ptr!=NULL)
      delete []ptr;
    capacity=c;
    lastIndex=-1;
-   ptr=new int[capacity];
+   ptr=new X[capacity];
 }
-void Array::Insert(int index,int data)
+template<class X>
+void Array<X>::Insert(int index,X data)
 {
    if(index<0||index>lastIndex+1)
          cout<<"Invalied Index !!!!!!!!!!";
@@ -81,7 +88,8 @@ void Array::Insert(int index,int data)
    else
      cout<<"Array Overflow ";
 }
-void Array::Append(int data)
+template<class X>
+void Array<X>::Append(X data)
 {
     if(isEmpty())
        {
@@ -91,7 +99,8 @@ void Array::Append(int data)
     else
      cout<<"Array Overflow";   
 }
-void Array::Delete(int index)
+template<class X>
+void Array<X>::Delete(int index)
 {
      if(index<0||index>lastIndex)
          cout<<"Invalied Index or Underflow !!!!!!!!!!";
@@ -103,14 +112,16 @@ void Array::Delete(int index)
         lastIndex--;      
       } 
 }
-void Array::Edit(int index,int data)
+template<class X>
+void Array<X>::Edit(int index,X data)
 {
     if(index<0||index>lastIndex)
          cout<<"Invalied Index !!!!!!!!!!";
       else   
        ptr[index]=data;
 }
-int Array::getItem(int index)
+template<class X>
+X Array<X>::getItem(int index)
 {
     try
     {
@@ -121,7 +132,8 @@ int Array::getItem(int index)
     catch(int){cout<<"Invalied Index" ;}
     return -1;
 }
-int Array::SearchData(int data)
+template<class X>
+int Array<X>::SearchData(X data)
 {
    int i;
    for(i=0;i<=lastIndex;i++)
@@ -129,23 +141,28 @@ int Array::SearchData(int data)
          return i;
    return -1;      
 }
-bool Array::isEmpty()
+template<class X>
+bool Array<X>::isEmpty()
 {
     return capacity!=lastIndex+1; 
 }
-bool Array::isFull()
+template<class X>
+bool Array<X>::isFull()
 {
     return capacity==lastIndex+1;  
 }
-int Array::countItem()
+template<class X>
+int Array<X>::countItem()
 {
     return lastIndex+1;
 }
-int Array::getCapacity()
+template<class X>
+int Array<X>::getCapacity()
 {
     return capacity;
 }
-Array::~Array()
+template<class X>
+Array<X>::~Array()
 {
     delete []ptr;
 }

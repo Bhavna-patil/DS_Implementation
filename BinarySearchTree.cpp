@@ -3,40 +3,44 @@
 using namespace std;
 #define EMPTY_TREE 1
 #define DATA_NOT_FOUND 2
+template<class X>
 struct node
 {
-    node *left;
-    int item;
-    node *right;
+    node<X> *left;
+    X item;
+    node<X> *right;
 };
+template<class X>
 class BST
 {
     private:
-       node *root; 
-       void recPreorder(node*);
-       void recInorder(node*);
-       void recPostorder(node*); 
-       void CopyInorder(BST&,node*); 
+       node<x> *root; 
+       void recPreorder(node<X>*);
+       void recInorder(node<X>*);
+       void recPostorder(node<X>*); 
+       void CopyInorder(BST<X>&,node<X>*); 
     protected:
-       node* creatNode(int);   
+       node<X>* creatNode(X);   
     public:
        BST();  
-       BST(BST&);
-       BST& operator=(BST&);
+       BST(BST<X>&);
+       BST<X>& operator=(BST<X>&);
        bool is_empty(); 
-       void Insert(int);
+       void Insert(X);
        void preorder_traversal();
        void postorder_traversal();
        void inorder_traversal();
-       void Delete(int);
-       node* search(int);
+       void Delete(X);
+       node<X>* search(X);
        ~BST();
 };
-BST::BST()
+template<class X>
+BST<X>::BST()
 {
     root=NULL;
 }
-void BST::CopyInorder(BST &b,node *root)
+template<class X>
+void BST<X>::CopyInorder(BST<X> &b,node<X> *root)
 {
     if(root)
     {
@@ -45,13 +49,15 @@ void BST::CopyInorder(BST &b,node *root)
         CopyInorder(b,root->right);
     }
 }
-BST::BST(BST &bst)
+template<class X>
+BST<X>::BST(BST<X> &bst)
 {
   root=NULL;
   if(bst.root)
     bst.CopyInorder(*this,bst.root);
 }
-BST& BST::operator=(BST &bst)
+template<class X>
+BST<X>& BST<X>::operator=(BST<X> &bst)
 {
   while(root)
     Delete(root->item);
@@ -59,21 +65,24 @@ BST& BST::operator=(BST &bst)
     bst.CopyInorder(*this,bst.root);
    return *this; 
 }
-bool BST::is_empty()
+template<class X>
+bool BST<X>::is_empty()
 {
     return root==NULL;
 } 
-node* BST::creatNode(int data)
+template<class X>
+node<X>* BST<X>::creatNode(X data)
 {
-    node *n=new node;
+    node<X> *n=new node;
     n->left=NULL;
     n->item=data;
     n->right=NULL;
     return n;
 }
-void BST::Insert(int data)
+template<class X>
+void BST<X>::Insert(X data)
 {
-    node *t;
+    node<X> *t;
     if(root==NULL)
     {
         root=creatNode(data);
@@ -110,7 +119,8 @@ void BST::Insert(int data)
     }
     
 }
-void BST::recPostorder(node *root)
+template<class X>
+void BST<X>::recPostorder(node<X> *root)
 {
     if(root)
     {
@@ -119,11 +129,13 @@ void BST::recPostorder(node *root)
         cout<<root->item; 
     } 
 }
-void BST::postorder_traversal()
+template<class X>
+void BST<X>::postorder_traversal()
 {
     recPostorder(root);
 }
-void BST::recPreorder(node *root)
+template<class X>
+void BST<X>::recPreorder(node<X> *root)
 {
     if(root)
     {
@@ -132,11 +144,13 @@ void BST::recPreorder(node *root)
         recPreorder(root->right);
     } 
 }
-void BST::preorder_traversal()
+template<class X>
+void BST<X>::preorder_traversal()
 {
     recPreorder(root);
 }
-void BST::recInorder(node *root)
+template<class X>
+void BST<X>::recInorder(node<X> *root)
 {
     if(root)
     {
@@ -145,13 +159,15 @@ void BST::recInorder(node *root)
         recInorder(root->right);
     } 
 }
-void BST::inorder_traversal()
+template<class X>
+void BST<X>::inorder_traversal()
 {
     recInorder(root);
 }
-void BST::Delete(int data)
+template<class X>
+void BST<X>::Delete(X data)
 {
-    node *ptr,*prtptr;
+    node<X> *ptr,*prtptr;
     if(root==NULL)
         throw EMPTY_TREE;
     ptr=root;
@@ -182,7 +198,7 @@ void BST::Delete(int data)
            }
         else if(ptr->left && ptr->right) //two child  
         {
-           node *suc,*prtsuc;
+           node<X> *suc,*prtsuc;
            suc=ptr->right;
            prtsuc=ptr;
            while(suc->left!=NULL)
@@ -218,7 +234,7 @@ void BST::Delete(int data)
         }
          else if(ptr->left && ptr->right) //two child  
         {
-           node *suc,*prtsuc;
+           node<X> *suc,*prtsuc;
            suc=ptr->right;
            prtsuc=ptr;
            while(suc->left!=NULL)
@@ -254,9 +270,10 @@ void BST::Delete(int data)
         }
     }
 }
-node* BST::search(int data)
+template<class X>
+node<X>* BST<X>::search(X data)
 {
-   node *t=root;
+   node<X> *t=root;
    while(t)
    {
       if(t->item==data)
@@ -268,7 +285,8 @@ node* BST::search(int data)
    }
    return NULL;
 }
-BST::~BST()
+template<class X>
+BST<X>::~BST()
 {
     while(root)
       Delete(root->item);

@@ -1,40 +1,44 @@
 #include<stdlib.h>
 #include<iostream>
 using namespace std;
+template<class X>
 struct node
 {
-    int item;
-    node *next;
+    X item;
+    node<X> *next;
 };
+template<class X>
 class CLL
 {
     private:
-       node *last;
+       node<X> *last;
     public:
       CLL();
-      CLL(CLL&);
-      CLL& operator=(CLL&);   
-      void InsertAtStart(int);
-      void InsertAtLast(int);
-      void InsertAfter(node*,int);
-      node* Search(int);
+      CLL(CLL<X>&);
+      CLL<X>& operator=(CLL<X>&);   
+      void InsertAtStart(X);
+      void InsertAtLast(X);
+      void InsertAfter(node<X>*,X);
+      node<X>* Search(X);
       void DeleteFirst();
       void DeleteLast();
-      void DeleteNode(node*);
-      void Edit(node*,int);
+      void DeleteNode(node<X>*);
+      void Edit(node<X>*,X);
       int CountLIstItem();
       void ShowLIstItem();
       ~CLL();
 };
-CLL::CLL()
+template<class X>
+CLL<X>::CLL()
 {
     last=NULL;
 }
-CLL::CLL(CLL &L)
+template<class X>
+CLL<X>::CLL(CLL<X> &L)
 {
    if(L.last)
    {
-      node *t=L.last->next;
+      node<X> *t=L.last->next;
       last=NULL;
       while(t!=L.last)
       {
@@ -46,13 +50,14 @@ CLL::CLL(CLL &L)
    else
      last=NULL;
 }
-CLL& CLL::operator=(CLL &L)
+template<class X>
+CLL<X>& CLL<X>::operator=(CLL<X> &L)
 {
   while(last)
      DeleteFirst();
   if(L.last)   
   {
-     node *t=L.last->next;
+     node<X> *t=L.last->next;
      last=NULL;
      while(t!=L.last)
      {
@@ -65,9 +70,10 @@ CLL& CLL::operator=(CLL &L)
     last=NULL;
   return *this;  
 }
-void CLL::InsertAtStart(int data)
+template<class X>
+void CLL<X>::InsertAtStart(X data)
 {
-    node *n=new node;
+    node<X> *n=new node<X>;
     n->item=data;
     if(last==NULL)
     {
@@ -80,9 +86,10 @@ void CLL::InsertAtStart(int data)
         last->next=n;
     }
 }
-void CLL::InsertAtLast(int data)
+template<class X>
+void CLL<X>::InsertAtLast(X data)
 {
-    node *n=new node;
+    node<X> *n=new node<X>;
     n->item=data;
     if(last==NULL)
     {
@@ -96,11 +103,12 @@ void CLL::InsertAtLast(int data)
       last=n;
     }
 }
-void CLL::InsertAfter(node *n1,int data)
+template<class X>
+void CLL<X>::InsertAfter(node<X> *n1,X data)
 {
     if(n1)
     {
-        node *n=new node;
+        node<X> *n=new node<X>;
         n->item=data;
         n->next=n1->next;
         n1->next=n;
@@ -108,11 +116,12 @@ void CLL::InsertAfter(node *n1,int data)
          last=n;
     }
 }
-node* CLL::Search(int item)
+template<class X>
+node<X>* CLL<X>::Search(X item)
 {
   if(last)
   {
-     node *t=last;
+     node<X> *t=last;
      if(last->item==item)
      return last;
      else   
@@ -128,7 +137,8 @@ node* CLL::Search(int item)
   }
    return NULL;
 }
-void CLL::DeleteFirst()
+template<class X>
+void CLL<X>::DeleteFirst()
 {
     try
     {
@@ -141,7 +151,7 @@ void CLL::DeleteFirst()
         }
       else
        {
-         node *t=last->next;
+         node<X> *t=last->next;
          last->next=t->next;
          delete t;
        }
@@ -149,19 +159,21 @@ void CLL::DeleteFirst()
     catch(char *str)
      {cout<<str;}
 }
-void CLL::Edit(node *n,int data)
+template<class X>
+void CLL<X>::Edit(node<X> *n,X data)
 {
   if(n)
    n->item=data;
 }
-int CLL::CountLIstItem()
+template<class X>
+int CLL<X>::CountLIstItem()
 {
   int c=0;
   if(last==NULL)
     return c;
   else
     {
-      node *t=last->next;
+      node<X> *t=last->next;
       while(t!=last)
         {
           c++;
@@ -170,7 +182,8 @@ int CLL::CountLIstItem()
     }  
   return c++;  
 }
-void CLL::DeleteLast()
+template<class X>
+void CLL<X>::DeleteLast()
 {
     try
     {
@@ -183,7 +196,7 @@ void CLL::DeleteLast()
         }
       else
       {
-        node *t=last->next;
+        node<X> *t=last->next;
         while(t->next!=last)
           t=t->next;
         t->next=last->next;
@@ -196,7 +209,8 @@ void CLL::DeleteLast()
         cout<<str;
      }
 }
-void CLL::DeleteNode(node *n)
+template<class X>
+void CLL<X>::DeleteNode(node<X> *n)
 {
     if(n)
     {
@@ -212,7 +226,7 @@ void CLL::DeleteNode(node *n)
         }
         else
         {
-           node *t=last->next;
+           node<X> *t=last->next;
            while(t->next!=n)  
              t=t->next;
            t->next=n->next;
@@ -222,11 +236,12 @@ void CLL::DeleteNode(node *n)
         }
     }
 }
-void CLL::ShowLIstItem()
+template<class X>
+void CLL<X>::ShowLIstItem()
 {
   if(last)
   {
-     node *t=last->next;
+     node<X> *t=last->next;
      while(t!=last)
      {
        cout<<t->item<<" ";
@@ -237,7 +252,8 @@ void CLL::ShowLIstItem()
   else
   cout<<"List is empty";
 }
-CLL::~CLL()
+template<class X>
+CLL<X>::~CLL()
 {
    if(last)
     DeleteFirst();
@@ -245,17 +261,18 @@ CLL::~CLL()
 
 int main()
 {
-  CLL c1 ;
+  CLL<int> c1 ;
   c1.InsertAtLast(1);
   c1.InsertAtLast(2);
   c1.InsertAtLast(3);
   c1.InsertAtStart(0);
   c1.InsertAfter(c1.Search(3),4);
+  c1.ShowLIstItem();
   c1.DeleteFirst();
   c1.DeleteLast();
   c1.DeleteNode(c1.Search(3));
   cout<<endl;
-  CLL c2=c1;
+  CLL<int> c2=c1;
   c2.ShowLIstItem();
   return 0;
 }
