@@ -1,106 +1,126 @@
 #include<stdlib.h>
 #include<iostream>
 using namespace std;
-
-class Array
+template<class X>
+class DynArray
 {
-    private:
-       int capacity;
-       int lastIndex;
-       int *ptr;
-    protected:
-       void setCapacity(int);
-       void setPointer(int *);
-       void setLastIndex(int);    
-    public:
-       Array();   
-       Array(int);
-       Array(Array&);
-       Array& operator=(Array&);
-       void CreatArray(int);
-       virtual void Insert(int,int);
-       virtual void Append(int);
-       void Edit(int,int);
-       virtual void Delete(int);
-       int GetData(int);
-       int Count();
-       int getCapacity();
-       int SearchData(int);
-       int* getPointer();
-       int getLastIndex();
-       bool isEmpty();
-       bool isFull();
-       ~Array();
+  private:
+      int capacity;
+      int lastIndex;
+      X *ptr;
+  protected:
+      void DoubleArr();
+      void HalfArr();    
+  public:
+      DynArray();
+      DynArray(int a);
+      DynArray(DynArray<X>&);
+      DynArray& operator=(DynArray<X>&);
+      void creatArray(int);
+      void Insert(int,X);
+      void Append(X);
+      void Delete(int);
+      void Edit(int,X);
+      X getItem(int);
+      bool isEmpty();
+      bool isFull();
+      int SearchData(X);
+      int countItem();
+      int getCapacity();
+      ~DynArray();
 };
-void Array::setPointer(int *temp) { delete []ptr; ptr=temp; }
-void Array::setLastIndex(int c) {lastIndex=c;  }
-Array::Array()
+template<class X>
+void DynArray<X>::DoubleArr()
 {
-    capacity=0;
-    lastIndex=-1;
-    ptr=NULL;
+   capacity=2*capacity;
+   X *temp=new X[capacity];
+    for(int i=0;i<=lastIndex();i++)
+      temp[i]=ptr[i];
+   delete []ptr;
+   ptr=temp;   
 }
-Array::Array(int c)
+template<class X>
+void DynArray<X>::HalfArr()
+{
+   capacity=capacity/2;
+   X *temp=new X[capacity];
+    for(int i=0;i<=lastIndex();i++)
+      temp[i]=ptr[i];
+   delete []ptr;
+   ptr=temp;   
+}
+template<class X>
+DynArray<X>::DynArray()
+{
+   ptr=NULL;
+   capacity=0;
+   lastIndex=-1;
+}
+template<class X>
+DynArray<X>::DynArray(int c)
 {
     capacity=c;
     lastIndex=-1;
-    ptr=new int[capacity];
+    ptr=new X[capacity];
 }
-Array::Array(Array &A)
+template<class X>
+DynArray<X>::DynArray(DynArray<X> &A)
 {
     capacity=A.capacity;
     lastIndex=A.lastIndex;
     ptr=new int[capacity];
     int i;
     for(i=0;i<=lastIndex;i++)
-       ptr[i]=A.ptr[i];
+      ptr[i]=A.ptr[i];
 }
-Array& Array::operator=(Array &A)
+template<class X>
+DynArray<X>& DynArray<X>::operator=(DynArray<X> &A)
 {
     if(ptr!=NULL)
        delete []ptr;
     capacity=A.capacity;
     lastIndex=A.lastIndex;
-    ptr=new int[capacity];
+    ptr=new X[capacity];
     int i;
     for(i=0;i<=lastIndex;i++)
       ptr[i]=A.ptr[i];  
       return *this; 
 }
-void Array::CreatArray(int c)
+template<class X>
+void DynArray<X>::creatArray(int c)
 {
    if(ptr!=NULL)
      delete []ptr;
    capacity=c;
    lastIndex=-1;
-   ptr=new int[capacity];
+   ptr=new X[capacity];
 }
-void Array::Insert(int index,int data)
+template<class X>
+void DynArray<X>::Insert(int index,X data)
 {
    if(index<0||index>lastIndex+1)
          cout<<"Invalied Index !!!!!!!!!!";
-   if(!isFull())  
-      {
+   else 
+     {
+         if(isFull())
+            DoubleArr();
          int i;
          for(i=lastIndex+1;i>index;i--)
              ptr[i]=ptr[i-1];  
              ptr[index]=data;
-        lastIndex++;      
-      } 
-   else
-     cout<<"Array Overflow ";
+        lastIndex++; 
+     }     
 }
-void Array::Append(int data)
+template<class X>
+void DynArray<X>::Append(X data)
 {
-    if(isEmpty())
-       {
-          ptr[lastIndex+1]=data;
-          lastIndex++;
-       }
-    else
-     cout<<"Array Overflow";   
+    if(isFull())
+       DoubleArr()
+    ptr[lastIndex+1]=data;
+    lastIndex++;
 }
-void Array::Delete(int index)
+template<class X>
+void DynArray<X>::Delete(int index)
 {
      if(index<0||index>lastIndex)
          cout<<"Invalied Index or Underflow !!!!!!!!!!";
@@ -111,15 +131,19 @@ void Array::Delete(int index)
            ptr[i]=ptr[i+1];
         lastIndex--;      
       } 
+      if(lastIndex < capacity/2 && capacity>1)
+        HalfArr();
 }
-void Array::Edit(int index,int data)
+template<class X>
+void DynArray<X>::Edit(int index,X data)
 {
     if(index<0||index>lastIndex)
          cout<<"Invalied Index !!!!!!!!!!";
       else   
        ptr[index]=data;
 }
-int Array::GetData(int index)
+template<class X>
+X DynArray<X>::getItem(int index)
 {
     try
     {
@@ -130,7 +154,8 @@ int Array::GetData(int index)
     catch(int){cout<<"Invalied Index" ;}
     return -1;
 }
-int Array::SearchData(int data)
+template<class X>
+int DynArray<X>::SearchData(X data)
 {
    int i;
    for(i=0;i<=lastIndex;i++)
@@ -138,153 +163,28 @@ int Array::SearchData(int data)
          return i;
    return -1;      
 }
-bool Array::isEmpty()  { return lastIndex==-1; }
-bool Array::isFull()  { return capacity==lastIndex+1; }
-int Array::Count()  { return lastIndex+1; }
-int Array::getCapacity()  { return capacity; }
-int Array::getLastIndex() {  return lastIndex;}
-void Array::setCapacity(int c) { capacity=c; }
-int* Array::getPointer()  {  return ptr; }
-Array::~Array() { delete []ptr; }
-
-class DynamicArray:public Array
+template<class X>
+bool DynArray<X>::isEmpty()
 {
-   protected:
-        void doubleArray();
-        void halfArray();
-   public:
-        DynamicArray();   
-        DynamicArray(DynamicArray&);
-        DynamicArray& operator=(DynamicArray&);
-        void Insert(int,int);
-        void Append(int);
-        void Delete(int);    
-        ~DynamicArray();
-};
-DynamicArray::DynamicArray():Array()
-{
-   setCapacity(0);
-   setLastIndex(-1);
-   setPointer(NULL);
+    return capacity!=lastIndex+1; 
 }
-DynamicArray::DynamicArray(DynamicArray &a)
+template<class X>
+bool DynArray<X>::isFull()
 {
-   int *p,*q=a.getPointer(),i;
-   setCapacity(a.getCapacity());
-   setLastIndex(a.getLastIndex());
-   setPointer(new int[getCapacity()]);
-   p=getPointer();
-   for(i=0;i<=getLastIndex();i++)
-      p[i]=q[i];  
+    return capacity==lastIndex+1;  
 }
-DynamicArray& DynamicArray::operator=(DynamicArray &a)
+template<class X>
+int DynArray<X>::countItem()
 {
-   int *p=getPointer(),*q=a.getPointer(),i;
-   if(p!=NULL)
-      delete []p;
-   setCapacity(a.getCapacity());
-   setLastIndex(a.getLastIndex());
-   setPointer(new int[getCapacity()]);
-   p=getPointer();
-   for(i=0;i<=getLastIndex();i++)
-      p[i]=q[i];
-   return *this;   
+    return lastIndex+1;
 }
-void DynamicArray::doubleArray()
-  {
-     int *temp,i,*p;
-     p=getPointer();
-     temp=new int[getCapacity()*2];
-     for(i=0;i<Count();i++)
-       temp[i]=p[i];
-     setPointer(temp);  
-     setCapacity(2*getCapacity());  
-  }
-void DynamicArray::halfArray()  
+template<class X>
+int DynArray<X>::getCapacity()
 {
-   int *temp,i,*p;
-   p=getPointer();
-   temp=new int[getCapacity()/2];
-   for(i=0;i<Count();i++)
-     temp[i]=p[i];
-   setPointer(temp);
-   setCapacity(getCapacity()/2);
+    return capacity;
 }
-void DynamicArray::Insert(int index,int data)
+template<class X>
+DynArray<X>::~DynArray()
 {
-   int *p;
-   p=getPointer();
-   if(isFull())
-   {
-       doubleArray();
-       setCapacity(2*getCapacity());
-       p=getPointer();
-   }
-   try 
-   {   
-      if(index<0||index>getLastIndex()+1)  
-        throw 1;
-   }catch(int){cout<<"Invalied Index";} 
-   int i;
-   for(i=getLastIndex()+1;i<index;i--)
-        p[i]=p[i-1];
-        p[index]=data;
-   setLastIndex(getLastIndex()+1);
-}
-void DynamicArray::Append(int data)
-{ 
-   int *p=getPointer();
-   if(isFull())
-   {
-       doubleArray();
-       p=getPointer();
-   }
-   p[getLastIndex()+1]=data;
-   setLastIndex(getLastIndex()+1);
-}
-void DynamicArray::Delete(int index)
-{
-   int *p;
-   p=getPointer();
-   try
-   {
-       if(isEmpty())
-          throw 1;
-       else if(index<0||index>getLastIndex())   
-          throw 2;
-       else
-       {
-          int i;
-          for(i=index;i<getLastIndex();i++)
-            p[i]=p[i+1];
-          setLastIndex(getLastIndex()-1);   
-       }
-   }
-   catch(int a)
-   {
-      if(a==1)
-      cout<<"Array Underflow";
-      else
-      cout<<"Invalied Index";
-   }
-   if(getCapacity()>1 && getLastIndex()+1<=getCapacity()/2)
-      halfArray();
-}
-DynamicArray::~DynamicArray() {delete []getPointer();}
-
-int main()
-{
-   DynamicArray a;
-   int i;
-   a.CreatArray(6);
-   a.Insert(0,90);
-   a.Append(10);
-   a.Append(20);
-   a.Append(30);
-   a.Append(40);
-   a.Delete(3);
-   for(i=0;i<a.Count();i++)
-     cout<<a.GetData(i)<<" ";
-   cout<<endl<<a.SearchData(168);
-   return 0;  
+    delete []ptr;
 }
